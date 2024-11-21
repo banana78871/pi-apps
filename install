@@ -7,11 +7,6 @@ function error {
 
 cd "$HOME"
 
-#ensure non-root
-if [[ "$(id -u)" == 0 ]]; then
-  error "Pi-Apps is not designed to be installed as root! Please try again as a regular user."
-fi
-
 #ensure debian
 command -v apt >/dev/null || error "apt: command not found. Most likely this system is not running Debian."
 
