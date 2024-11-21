@@ -20,17 +20,17 @@ if uname -m | grep -qi 'x86\|i686\|i386' ;then
   error "Pi-Apps is not supported on non-ARM CPU architectures. We encourage you to use your distro's app store, like Gnome Software or Discover Software Center."
 fi
 
-apt update || error "The command 'sudo apt update' failed. Before Pi-Apps will work, you must fix your apt package-management system."
+apt update || error "The command 'apt update' failed. Before Pi-Apps will work, you must fix your apt package-management system."
 
 #install dependencies
 dependencies='yad curl wget aria2 lsb-release software-properties-common apt-utils apt-transport-https gnupg imagemagick bc librsvg2-bin locales shellcheck git wmctrl xdotool x11-utils rsync unzip debsums libgtk3-perl'
 
 if ! dpkg -s $dependencies &>/dev/null ;then
-  sudo apt install $dependencies -y -f --no-install-recommends || error "Pi-Apps dependencies failed to install and so the Pi-Apps install has been aborted. Before Pi-Apps can be installed you must solve any errors above."
+   apt install $dependencies -y -f --no-install-recommends || error "Pi-Apps dependencies failed to install and so the Pi-Apps install has been aborted. Before Pi-Apps can be installed you must solve any errors above."
 fi
 
 #remove annoying "YAD icon browser" launcher
-sudo rm -f /usr/share/applications/yad-icon-browser.desktop
+rm -f /usr/share/applications/yad-icon-browser.desktop
 
 #download pi-apps if folder missing
 DIRECTORY="$(readlink -f "$(dirname "$0")")"
@@ -74,7 +74,7 @@ if command -v garcon-terminal-handler >/dev/null ;then
   echo "In order to install apps on ChromeOS, a working terminal emulator is required.
 Installing lxterminal in 10 seconds... (press Ctrl+C to cancel)"
   sleep 10
-  sudo apt install -yf lxterminal || error "Failed to install lxterminal on ChromeOS!"
+  apt install -yf lxterminal || error "Failed to install lxterminal on ChromeOS!"
 fi
 
 #menu button
