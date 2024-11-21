@@ -877,46 +877,46 @@ add_external_repo() { # add an external apt repo and its gpg key.
 
   # make apt keyring directory if it doesn't exist
   if [ ! -d /usr/share/keyrings ]; then
-    sudo mkdir -p /usr/share/keyrings || error "add_external_repo: failed to create apt keyring directory."
+    mkdir -p /usr/share/keyrings || error "add_external_repo: failed to create apt keyring directory."
   fi
 
   # check if .list file already exists
   if [ -f /etc/apt/sources.list.d/${reponame}.list ]; then
-    sudo rm -f /etc/apt/sources.list.d/${reponame}.list || error "add_external_repo: failed to remove conflicting .list file."
+    rm -f /etc/apt/sources.list.d/${reponame}.list || error "add_external_repo: failed to remove conflicting .list file."
   fi
 
   # check if .sources file already exists
   if [ -f /etc/apt/sources.list.d/${reponame}.sources ]; then
-    sudo rm -f /etc/apt/sources.list.d/${reponame}.sources || error "add_external_repo: failed to remove conflicting .sources file."
+    rm -f /etc/apt/sources.list.d/${reponame}.sources || error "add_external_repo: failed to remove conflicting .sources file."
   fi
 
   # download gpg key from specified url
   if [ -f /usr/share/keyrings/${reponame}-archive-keyring.gpg ]; then
-    sudo rm -f /usr/share/keyrings/${reponame}-archive-keyring.gpg
+    rm -f /usr/share/keyrings/${reponame}-archive-keyring.gpg
   fi 
   wget -qO- "$pubkeyurl" | sudo gpg --dearmor -o /usr/share/keyrings/${reponame}-archive-keyring.gpg
 
   if [ $? != 0 ];then
-    sudo rm -f /etc/apt/sources.list.d/${reponame}.sources
-    sudo rm -f /usr/share/keyrings/${reponame}-archive-keyring.gpg
+    rm -f /etc/apt/sources.list.d/${reponame}.sources
+    rm -f /usr/share/keyrings/${reponame}-archive-keyring.gpg
     error "add_external_repo: download from specified pubkeyurl failed."
   fi
 
   # create .sources file
   echo "Types: deb
 URIs: $uris
-Suites: $suites" | sudo tee /etc/apt/sources.list.d/${reponame}.sources >/dev/null
+Suites: $suites" | tee /etc/apt/sources.list.d/${reponame}.sources >/dev/null
   if [ ! -z "$components" ]; then
-    echo "Components: $components" | sudo tee -a /etc/apt/sources.list.d/${reponame}.sources >/dev/null
+    echo "Components: $components" | tee -a /etc/apt/sources.list.d/${reponame}.sources >/dev/null
   fi
   for input in "${@: 6}"; do
-    echo "$input" | sudo tee -a /etc/apt/sources.list.d/${reponame}.sources >/dev/null
+    echo "$input" | tee -a /etc/apt/sources.list.d/${reponame}.sources >/dev/null
   done
-  echo "Signed-By: /usr/share/keyrings/${reponame}-archive-keyring.gpg" | sudo tee -a /etc/apt/sources.list.d/${reponame}.sources >/dev/null
+  echo "Signed-By: /usr/share/keyrings/${reponame}-archive-keyring.gpg" | tee -a /etc/apt/sources.list.d/${reponame}.sources >/dev/null
 
   if [ $? != 0 ];then
-    sudo rm -f /etc/apt/sources.list.d/${reponame}.sources
-    sudo rm -f /usr/share/keyrings/${reponame}-archive-keyring.gpg
+    rm -f /etc/apt/sources.list.d/${reponame}.sources
+    rm -f /usr/share/keyrings/${reponame}-archive-keyring.gpg
     error "add_external_repo: failed to create ${reponame}.list file"
   fi
 }
@@ -935,15 +935,15 @@ rm_external_repo() { # remove an external apt repo and its gpg key, if the repo 
 
   # always remove deprecated .list file if present
   if [ -f /etc/apt/sources.list.d/${reponame}.list ]; then
-    sudo rm -f /etc/apt/sources.list.d/${reponame}.list
+    rm -f /etc/apt/sources.list.d/${reponame}.list
   fi
 
   # exit gracefully if .sources file does not exist
   [ -f "/etc/apt/sources.list.d/$reponame.sources" ] || return 0
   
   if [ "$force" == force ]; then
-    sudo rm -f /usr/share/keyrings/${reponame}-archive-keyring.gpg || error "rm_external_repo: removal of ${reponame}-archive-keyring.gpg failed"
-    sudo rm -f /etc/apt/sources.list.d/${reponame}.sources || error "rm_external_repo: removal of ${reponame}.sources failed"
+    rm -f /usr/share/keyrings/${reponame}-archive-keyring.gpg || error "rm_external_repo: removal of ${reponame}-archive-keyring.gpg failed"
+    rm -f /etc/apt/sources.list.d/${reponame}.sources || error "rm_external_repo: removal of ${reponame}.sources failed"
     return 0
   fi
 
@@ -1804,7 +1804,7 @@ generate_app_icons() { #This converts the given $1 image into icon-24.png and ic
     --button=No!"${DIRECTORY}/icons/exit.png":1 --button=Yes!"${DIRECTORY}/icons/check.png":0
     button=$?
     if [ $button == 0 ];then
-      sudo apt-get install -y --no-install-recommends imagemagick || icon=''
+      apt-get install -y --no-install-recommends imagemagick || icon=''
     else
       exit 0
     fi
