@@ -35,7 +35,7 @@ if ! command -v convert >/dev/null ;then
   --button=No!"${DIRECTORY}/icons/exit.png":1 --button=Yes!"${DIRECTORY}/icons/check.png":0
   button=$?
   if [ $button == 0 ];then
-    sudo apt install -y --no-install-recommends imagemagick || icon=''
+    apt install -y --no-install-recommends imagemagick || icon=''
   else
     exit 0
   fi
